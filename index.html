@@ -31,6 +31,7 @@ h1 small{display:block;font-size:16px;font-weight:400;opacity:.85;margin-top:6px
 .timer b{font-size:26px;font-variant-numeric:tabular-nums;min-width:3.2em}
 .timer button{min-height:44px;border:0;border-radius:10px;padding:0 14px;background:var(--saf);color:#2a1a05;font-weight:500}
 .timer button.g2{background:rgba(255,255,255,.14);color:#fff}
+.acct{display:flex;flex-direction:column;gap:4px}.acct button{min-height:44px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:10px;padding:0 14px;font-weight:500}.acct span{font-size:13px;opacity:.85}
 .rug{height:22px;display:block;width:100%}
 nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
 nav .in{max-width:860px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:0 max(5vw,16px)}
@@ -95,6 +96,7 @@ h3{font-size:20px;margin:22px 0 8px}
     <div class="st"><b id="sToday">0</b><span>Min. heute</span></div>
     <div class="st"><b id="sKnown">0</b><span>Wörter sicher</span></div>
   </div>
+  <div class="acct"><button id="login">Mit Google anmelden</button><span id="who">Nur auf diesem Gerät gespeichert</span></div>
   <div class="timer"><b id="tm">20:00</b><button id="tGo">Start</button><button id="tRe" class="g2" aria-label="Timer zurücksetzen">↺</button></div>
 </div></header>
 <svg class="rug" viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true">
@@ -280,7 +282,20 @@ const P=[
 /* Speicher */
 const KEY='tropa-ru-v1';let S={c:{},d:{},a:{},tx:{},gr:{},qb:0};
 try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let cloudT=null;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  if(window.TROPA&&window.TROPA.push){clearTimeout(cloudT);cloudT=setTimeout(()=>window.TROPA.push(S),1500)}};
+/* Schnittstelle für Firebase (siehe Modul unten) */
+const mergeState=(a,b)=>{const m={c:{},d:{},a:{},tx:{},gr:{},qb:Math.max(a.qb||0,b.qb||0)};
+  for(const k of new Set([...Object.keys(a.c||{}),...Object.keys(b.c||{})])){const x=(a.c||{})[k],y=(b.c||{})[k];m.c[k]=!x?y:!y?x:((y.b>x.b||(y.b===x.b&&y.dd>x.dd))?y:x)}
+  for(const k of new Set([...Object.keys(a.d||{}),...Object.keys(b.d||{})]))m.d[k]=Math.max((a.d||{})[k]||0,(b.d||{})[k]||0);
+  Object.assign(m.a,a.a,b.a);Object.assign(m.tx,a.tx,b.tx);
+  for(const k of new Set([...Object.keys(a.gr||{}),...Object.keys(b.gr||{})]))m.gr[k]=Math.max((a.gr||{})[k]||0,(b.gr||{})[k]||0);
+  return m};
+window.TROPA=Object.assign(window.TROPA||{},{
+  get:()=>S,
+  merge:cloud=>{S=mergeState(S,cloud||{});try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}stats();render();return S}
+});
 const day=(o=0)=>{const d=new Date();d.setDate(d.getDate()+o);return d.toISOString().slice(0,10)};
 const dnum=s=>Math.floor(new Date(s+'T12:00:00').getTime()/864e5);
 const mark=()=>{S.a[day()]=1;save();stats()};
@@ -480,6 +495,33 @@ function sprechen(){
 }
 
 tShow();stats();route();
+}
+</script>
+<script type="module">
+/* Firebase: Google-Login + Fortschritt in Firestore unter tropa/{uid} */
+const btn=document.getElementById('login'),who=document.getElementById('who');
+let cfg=null;
+try{({firebaseConfig:cfg}=await import('./firebase-config.js'))}catch(e){}
+if(!cfg||!cfg.apiKey){btn.hidden=true}
+else{
+  const V='10.12.2',B=`https://www.gstatic.com/firebasejs/${V}/`;
+  const {initializeApp}=await import(B+'firebase-app.js');
+  const {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged}=await import(B+'firebase-auth.js');
+  const {getFirestore,doc,getDoc,setDoc}=await import(B+'firebase-firestore.js');
+  const app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app);
+  let user=null;
+  btn.onclick=async()=>{try{user?await signOut(auth):await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){who.textContent='Anmeldung fehlgeschlagen: '+e.code}};
+  window.TROPA.push=async s=>{if(!user)return;try{await setDoc(doc(db,'tropa',user.uid),{state:JSON.stringify(s),updated:Date.now()});who.textContent='Gespeichert in der Cloud · '+(user.displayName||user.email)}catch(e){who.textContent='Cloud-Speichern fehlgeschlagen: '+e.code}};
+  onAuthStateChanged(auth,async u=>{
+    user=u;
+    if(!u){btn.textContent='Mit Google anmelden';who.textContent='Nur auf diesem Gerät gespeichert';return}
+    btn.textContent='Abmelden';who.textContent='Synchronisiere …';
+    try{const snap=await getDoc(doc(db,'tropa',u.uid));
+      const cloud=snap.exists()?JSON.parse(snap.data().state||'{}'):{};
+      const merged=window.TROPA.merge(cloud);
+      await window.TROPA.push(merged);
+    }catch(e){who.textContent='Sync fehlgeschlagen: '+e.code}
+  });
 }
 </script>
 </body>

@@ -12,3 +12,13 @@ Russisch-Lern-App von A2 bis B1 mit drei Themen: **Islam**, **Dagestan** und **S
 
 ## Starten
 Einfach `index.html` im Browser öffnen. Der Fortschritt wird im `localStorage` des Browsers gespeichert.
+
+## Firebase (Google-Login + Cloud-Speicherung)
+1. In der [Firebase Console](https://console.firebase.google.com) ein Projekt anlegen (oder ein bestehendes nutzen).
+2. **Authentication → Anmeldemethode → Google** aktivieren.
+3. **Authentication → Einstellungen → Autorisierte Domains**: `athleticconsumer-dotcom.github.io` hinzufügen.
+4. **Firestore Database** erstellen und die Regeln aus `firestore.rules` einfügen.
+5. **Projekteinstellungen → Deine Apps → Web-App** anlegen und die Werte von `firebaseConfig` in `firebase-config.js` eintragen.
+
+Ohne Konfiguration funktioniert die App weiter, speichert dann aber nur lokal im Browser.
+Beim Anmelden werden lokaler Fortschritt und Cloud-Fortschritt zusammengeführt.
