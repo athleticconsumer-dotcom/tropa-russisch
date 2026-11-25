@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тропа · Russisch A2→B1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=PT+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, ruhig, konzentriert; ein Lernwerkzeug, das man jeden Tag 20 Minuten öffnet
+   IDEA: ein dagestanischer Teppich, jede Lektion ein geknüpftes Feld, Fortschritt als gewebtes Muster
+   PICTURE: das Lernwerkzeug selbst (Karte, Text, Übung) oben, gerahmt von einer Teppichbordüre
+   COLOUR and TYPE: Granatapfelrot dominant, Türkis (Kubatschi-Emaille) als Stütze, Safran als Akzent; Rubik + PT Serif für russische Texte
+   LAYOUT: rotes Kopfband mit Timer und Zahlen, Tabs, eine ruhige Arbeitsspalte bis 860px */
+:root{color-scheme:light dark;
+--bg:light-dark(#f6f3ee,#160d10);--card:light-dark(#ffffff,#22151a);--ink:light-dark(#1d1416,#f3ebe6);--mute:light-dark(#6d5f60,#b7a7a4);
+--red:light-dark(#9b1b30,#c4344c);--redd:light-dark(#7a1225,#5a0e1c);--tur:light-dark(#16706f,#3fb3ae);--saf:#e9a92b;--line:light-dark(#e4dcd3,#3a2a2f);
+--ok:light-dark(#16706f,#3fb3ae);--bad:light-dark(#b3261e,#ff7a6e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Rubik,system-ui,sans-serif;overflow-x:clip}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible{outline:3px solid var(--saf);outline-offset:2px}
+.top{background:var(--redd);color:#fff6ee;padding:22px max(5vw,16px) 18px}
+.top .in{max-width:860px;margin:0 auto;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:clamp(32px,6vw,46px);line-height:1.05;font-weight:700;text-wrap:balance}
+h1 small{display:block;font-size:16px;font-weight:400;opacity:.85;margin-top:6px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.st b{display:block;font-size:26px;line-height:1.1}.st span{font-size:13px;opacity:.85}
+.timer{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border-radius:14px;padding:8px 10px 8px 16px}
+.timer b{font-size:26px;font-variant-numeric:tabular-nums;min-width:3.2em}
+.timer button{min-height:44px;border:0;border-radius:10px;padding:0 14px;background:var(--saf);color:#2a1a05;font-weight:500}
+.timer button.g2{background:rgba(255,255,255,.14);color:#fff}
+.rug{height:22px;display:block;width:100%}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .in{max-width:860px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:0 max(5vw,16px)}
+nav button{flex:none;border:0;background:none;min-height:48px;padding:0 14px;border-bottom:3px solid transparent;color:var(--mute);font-weight:500}
+nav button[aria-selected=true]{color:var(--red);border-color:var(--red)}
+main{max-width:860px;margin:0 auto;padding:24px max(5vw,16px) 60px}
+h2{font-size:32px;line-height:1.1;margin:0 0 6px}
+h3{font-size:20px;margin:22px 0 8px}
+.lead{color:var(--mute);margin:0 0 18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;min-height:44px;padding:0 16px}
+.chip[aria-pressed=true]{background:var(--tur);border-color:var(--tur);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.flash{min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;position:relative;overflow:hidden}
+.flash::before,.flash::after{content:"";position:absolute;left:0;right:0;height:10px;background:repeating-linear-gradient(90deg,var(--red) 0 14px,var(--saf) 14px 18px,var(--tur) 18px 32px,var(--saf) 32px 36px)}
+.flash::before{top:0}.flash::after{bottom:0}
+.word{font:700 clamp(34px,8vw,52px)/1.1 "PT Serif",Georgia,serif}
+.de{font-size:24px;font-weight:500;color:var(--tur)}
+.ex{font-family:"PT Serif",Georgia,serif;font-size:18px;max-width:34em}
+.ex i{display:block;font-family:Rubik,sans-serif;font-style:normal;font-size:15px;color:var(--mute)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{min-height:48px;border-radius:12px;border:0;padding:0 20px;font-weight:500;background:var(--red);color:#fff}
+.btn.alt{background:var(--tur)}.btn.gh{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.spk{border:1.5px solid var(--line);background:transparent;border-radius:50%;width:44px;height:44px;display:inline-grid;place-items:center;vertical-align:middle}
+.spk svg{width:20px;height:20px}
+.meta{font-size:14px;color:var(--mute)}
+.boxes{display:flex;gap:4px;margin-top:10px}.boxes i{width:28px;height:8px;border-radius:4px;background:var(--line)}.boxes i.on{background:var(--saf)}
+.text{font:19px/1.75 "PT Serif",Georgia,serif}
+.text .g{border:0;background:none;padding:0;font:inherit;color:inherit;border-bottom:2px dotted var(--tur)}
+.text .g.on{background:color-mix(in srgb,var(--saf) 35%,transparent)}
+.gloss{position:sticky;bottom:12px;margin-top:16px;background:var(--tur);color:#fff;border-radius:14px;padding:12px 16px;min-height:52px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+.gloss b{font-family:"PT Serif",serif;font-size:20px}
+.list{display:grid;gap:10px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-height:60px}
+.item .t{font-weight:500}.item .s{font-size:14px;color:var(--mute)}
+.tag{flex:none;font-size:13px;padding:3px 10px;border-radius:999px;background:var(--line)}
+.tag.done{background:var(--tur);color:#fff}
+.q{margin:18px 0}.q p{margin:0 0 8px;font-weight:500}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;min-height:48px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);padding:10px 14px;font-family:"PT Serif",serif;font-size:17px}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.opt.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.expl{background:var(--card);border-left:5px solid var(--saf);border-radius:0 14px 14px 0;padding:14px 18px;margin-bottom:12px}
+.exs{font-family:"PT Serif",serif;font-size:17px;margin:10px 0 0;padding-left:20px}
+.exs li{margin:4px 0}.exs span{display:block;font-family:Rubik,sans-serif;font-size:14px;color:var(--mute)}
+.bar{height:12px;border-radius:6px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--red)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.plan li{margin:8px 0}
+.prompt{font:20px/1.4 "PT Serif",serif;margin:6px 0}
+.note{font-size:14px;color:var(--mute);margin-top:22px}
+.score{font-size:40px;font-weight:700;color:var(--red);line-height:1}
+@media(max-width:600px){.top .in{flex-direction:column;align-items:flex-start}.timer{width:100%;justify-content:space-between}h2{font-size:26px}.card{padding:18px}}
+@media(prefers-reduced-motion:no-preference){.flash{transition:transform .25s}.flash.flip{transform:scale(.98)}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <h1>Тропа<small>Russisch von A2 nach B1 · Islam, Dagestan, Sport</small></h1>
+  <div class="stats">
+    <div class="st"><b id="sStreak">0</b><span>Tage in Folge</span></div>
+    <div class="st"><b id="sToday">0</b><span>Min. heute</span></div>
+    <div class="st"><b id="sKnown">0</b><span>Wörter sicher</span></div>
+  </div>
+  <div class="timer"><b id="tm">20:00</b><button id="tGo">Start</button><button id="tRe" class="g2" aria-label="Timer zurücksetzen">↺</button></div>
+</div></header>
+<svg class="rug" viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true">
+  <defs><pattern id="p" width="40" height="22" patternUnits="userSpaceOnUse">
+    <rect width="40" height="22" fill="#7a1225"/><path d="M20 2 L32 11 L20 20 L8 11Z" fill="#e9a92b"/><path d="M20 6 L27 11 L20 16 L13 11Z" fill="#16706f"/><circle cx="20" cy="11" r="2" fill="#fff6ee"/><path d="M0 11 L4 7 L4 15Z M40 11 L36 7 L36 15Z" fill="#16706f"/></pattern></defs>
+  <rect width="400" height="22" fill="url(#p)"/>
+</svg>
+<nav><div class="in" role="tablist" id="tabs"></div></nav>
+<main id="view"></main>
+
+<script>
+{
+const T=[{id:'islam',n:'Islam',ru:'Ислам'},{id:'dag',n:'Dagestan',ru:'Дагестан'},{id:'sport',n:'Sport',ru:'Спорт'}];
+
+/* Wortschatz: [russisch mit Betonung, deutsch, Beispiel, Übersetzung] */
+const V={
+islam:[
+['мече́ть','Moschee','По пя́тницам мы хо́дим в мече́ть.','Freitags gehen wir in die Moschee.'],
+['моли́ться','beten','Он мо́лится пять раз в день.','Er betet fünfmal am Tag.'],
+['нама́з','Gebet (Salah)','Пора́ на нама́з.','Es ist Zeit fürs Gebet.'],
+['аза́н','Gebetsruf','Я слы́шу аза́н из мече́ти.','Ich höre den Gebetsruf aus der Moschee.'],
+['омове́ние','rituelle Waschung (Wudu)','Пе́ред нама́зом ну́жно соверши́ть омове́ние.','Vor dem Gebet muss man die Waschung vollziehen.'],
+['моли́твенный ко́врик','Gebetsteppich','Он взял моли́твенный ко́врик.','Er nahm den Gebetsteppich.'],
+['Кора́н','Koran','Я чита́ю Кора́н ка́ждое у́тро.','Ich lese jeden Morgen den Koran.'],
+['су́ра','Sure','Я вы́учил но́вую су́ру.','Ich habe eine neue Sure gelernt.'],
+['ая́т','Vers (Aya)','Э́тот ая́т о́чень коро́ткий.','Dieser Vers ist sehr kurz.'],
+['учи́ть наизу́сть','auswendig lernen','Он у́чит Кора́н наизу́сть.','Er lernt den Koran auswendig.'],
+['проро́к','Prophet','Проро́к Муха́ммад – посла́нник Алла́ха.','Der Prophet Muhammad ist der Gesandte Allahs.'],
+['Всевы́шний','der Allerhöchste','Мы про́сим по́мощи у Всевы́шнего.','Wir bitten den Allerhöchsten um Hilfe.'],
+['ве́ра','Glaube','Ве́ра даёт си́лу.','Der Glaube gibt Kraft.'],
+['ве́рующий','gläubig; Gläubiger','Мой де́душка – о́чень ве́рующий челове́к.','Mein Großvater ist ein sehr gläubiger Mensch.'],
+['пост','Fasten','Во вре́мя поста́ мы не еди́м и не пьём днём.','Während des Fastens essen und trinken wir tagsüber nicht.'],
+['пости́ться','fasten','В Рамада́н мусульма́не по́стятся це́лый ме́сяц.','Im Ramadan fasten Muslime einen ganzen Monat.'],
+['ура́за','Ramadan-Fasten (umgangsspr.)','В Дагеста́не пост ча́сто называ́ют ура́зой.','In Dagestan nennt man das Fasten oft Urasa.'],
+['ифта́р','Iftar, Fastenbrechen','Ифта́р начина́ется по́сле зака́та.','Der Iftar beginnt nach Sonnenuntergang.'],
+['Ураза́-байра́м','Ramadanfest (Eid al-Fitr)','На Ураза́-байра́м вся семья́ собира́ется вме́сте.','Zum Ramadanfest kommt die ganze Familie zusammen.'],
+['Курба́н-байра́м','Opferfest (Eid al-Adha)','На Курба́н-байра́м мы де́лимся мя́сом с сосе́дями.','Zum Opferfest teilen wir Fleisch mit den Nachbarn.'],
+['има́м','Imam','Има́м чита́ет про́поведь в пя́тницу.','Der Imam hält freitags die Predigt.'],
+['про́поведь','Predigt (Chutba)','Сего́дня про́поведь была́ о терпе́нии.','Heute ging die Predigt um Geduld.'],
+['терпе́ние','Geduld (Sabr)','Терпе́ние – ва́жное ка́чество мусульма́нина.','Geduld ist eine wichtige Eigenschaft eines Muslims.'],
+['милосты́ня','Almosen (Sadaqa)','Дава́ть милосты́ню – хоро́шее де́ло.','Almosen geben ist eine gute Tat.'],
+['хадж','Hadsch','Хадж – э́то пало́мничество в Ме́кку.','Der Hadsch ist die Pilgerfahrt nach Mekka.'],
+['пало́мничество','Pilgerfahrt','Пало́мничество меня́ет челове́ка.','Die Pilgerfahrt verändert den Menschen.'],
+['зна́ние','Wissen','Иска́ть зна́ние – обя́занность ка́ждого мусульма́нина.','Wissen zu suchen ist Pflicht jedes Muslims.'],
+['проща́ть','vergeben','Ну́жно уме́ть проща́ть люде́й.','Man muss Menschen vergeben können.'],
+['сосе́д','Nachbar','Хоро́ший сосе́д – э́то большо́е сча́стье.','Ein guter Nachbar ist ein großes Glück.'],
+['ми́лость','Barmherzigkeit, Gnade','Мы про́сим ми́лости у Всевы́шнего.','Wir bitten den Allerhöchsten um Barmherzigkeit.'],
+['душа́','Seele','Нама́з – о́тдых для души́.','Das Gebet ist Erholung für die Seele.'],
+['рай','Paradies','Рай нахо́дится под нога́ми матере́й.','Das Paradies liegt unter den Füßen der Mütter.']],
+dag:[
+['го́ры','Berge','Дагеста́н – э́то страна́ гор.','Dagestan ist ein Land der Berge.'],
+['Кавка́з','Kaukasus','Дагеста́н нахо́дится на Се́верном Кавка́зе.','Dagestan liegt im Nordkaukasus.'],
+['ау́л','Bergdorf','Мой де́душка живёт в ста́ром ау́ле.','Mein Großvater lebt in einem alten Bergdorf.'],
+['го́рец','Bergbewohner','Го́рцы – си́льные и вы́носливые лю́ди.','Bergbewohner sind starke und ausdauernde Menschen.'],
+['наро́д','Volk','В Дагеста́не живёт бо́лее тридцати́ наро́дов.','In Dagestan leben mehr als dreißig Völker.'],
+['язы́к','Sprache','Здесь говоря́т на мно́гих языка́х.','Hier spricht man viele Sprachen.'],
+['родно́й','Mutter-, heimatlich','Мой родно́й язы́к – неме́цкий.','Meine Muttersprache ist Deutsch.'],
+['ро́дина','Heimat','Он ча́сто ду́мает о ро́дине.','Er denkt oft an die Heimat.'],
+['столи́ца','Hauptstadt','Махачкала́ – столи́ца Дагеста́на.','Machatschkala ist die Hauptstadt Dagestans.'],
+['мо́ре','Meer','Махачкала́ стои́т на берегу́ Каспи́йского мо́ря.','Machatschkala liegt am Ufer des Kaspischen Meeres.'],
+['бе́рег','Ufer, Küste','Ве́чером мы гуля́ли по бе́регу.','Abends gingen wir am Ufer spazieren.'],
+['дре́вний','uralt','Дербе́нт – оди́н из са́мых дре́вних городо́в Росси́и.','Derbent ist eine der ältesten Städte Russlands.'],
+['кре́пость','Festung','Над Дербе́нтом стои́т дре́вняя кре́пость.','Über Derbent steht eine uralte Festung.'],
+['каньо́н','Canyon','Сула́кский каньо́н о́чень глубо́кий.','Der Sulak-Canyon ist sehr tief.'],
+['ковёр','Teppich','Ба́бушка тка́ла ковры́ всю жизнь.','Großmutter hat ihr ganzes Leben Teppiche gewebt.'],
+['серебро́','Silber','В Куба́чи де́лают изде́лия из серебра́.','In Kubatschi stellt man Silberwaren her.'],
+['ма́стер','Meister, Handwerker','Э́тот ма́стер рабо́тает с серебро́м сорок лет.','Dieser Meister arbeitet seit vierzig Jahren mit Silber.'],
+['ремесло́','Handwerk','Ремесло́ передаётся от отца́ к сы́ну.','Das Handwerk wird vom Vater an den Sohn weitergegeben.'],
+['гостеприи́мство','Gastfreundschaft','Дагеста́нцы изве́стны свои́м гостеприи́мством.','Dagestaner sind für ihre Gastfreundschaft bekannt.'],
+['гость','Gast','Го́стя всегда́ сажа́ют на лу́чшее ме́сто.','Den Gast setzt man immer auf den besten Platz.'],
+['ста́рший','älter; der Ältere','Мла́дшие всегда́ уважа́ют ста́рших.','Die Jüngeren respektieren immer die Älteren.'],
+['уваже́ние','Respekt','Уваже́ние к роди́телям – э́то основа семьи́.','Respekt vor den Eltern ist die Grundlage der Familie.'],
+['обы́чай','Brauch','Э́то ста́рый го́рский обы́чай.','Das ist ein alter Bergbrauch.'],
+['семья́','Familie','У нас больша́я семья́.','Wir haben eine große Familie.'],
+['ро́дственник','Verwandter','На сва́дьбу прие́хали все ро́дственники.','Zur Hochzeit kamen alle Verwandten.'],
+['сва́дьба','Hochzeit','На сва́дьбе бы́ло пятьсо́т госте́й.','Auf der Hochzeit waren fünfhundert Gäste.'],
+['та́нец','Tanz','Лезги́нка – са́мый изве́стный та́нец Кавка́за.','Die Lesginka ist der bekannteste Tanz des Kaukasus.'],
+['па́паха','Papacha (Fellmütze)','Де́душка но́сит па́паху зимо́й.','Großvater trägt im Winter eine Papacha.'],
+['хинка́л','Chinkal (Teigstücke mit Fleisch)','Ма́ма гото́вит хинка́л с бара́ниной.','Mama kocht Chinkal mit Hammelfleisch.'],
+['бара́нина','Hammelfleisch','Бара́нину ва́рят не́сколько часо́в.','Das Hammelfleisch kocht man mehrere Stunden.'],
+['урбе́ч','Urbetsch (Samen-/Nusspaste)','Урбе́ч де́лают из семя́н и оре́хов.','Urbetsch macht man aus Samen und Nüssen.'],
+['печь','backen','Ба́бушка печёт хлеб ка́ждое у́тро.','Großmutter backt jeden Morgen Brot.']],
+sport:[
+['борьба́','Ringen','В Дагеста́не борьба́ – спорт но́мер оди́н.','In Dagestan ist Ringen Sportart Nummer eins.'],
+['во́льная борьба́','Freistilringen','Он занима́ется во́льной борьбо́й с шести́ лет.','Er ringt Freistil, seit er sechs ist.'],
+['боре́ц','Ringer','Э́тот боре́ц – чемпио́н ми́ра.','Dieser Ringer ist Weltmeister.'],
+['бой','Kampf','Бой продолжа́лся три ра́унда.','Der Kampf dauerte drei Runden.'],
+['бое́ц','Kämpfer','Бое́ц до́лжен быть споко́йным.','Ein Kämpfer muss ruhig sein.'],
+['сопе́рник','Gegner','Он уважа́ет своего́ сопе́рника.','Er respektiert seinen Gegner.'],
+['ра́унд','Runde','Во второ́м ра́унде он уста́л.','In der zweiten Runde wurde er müde.'],
+['уда́р','Schlag, Tritt','У него́ си́льный уда́р ного́й.','Er hat einen starken Tritt.'],
+['соревнова́ния','Wettkampf','Ско́ро у меня́ соревнова́ния.','Bald habe ich einen Wettkampf.'],
+['чемпиона́т','Meisterschaft','Он выступа́л на чемпиона́те ми́ра.','Er trat bei der Weltmeisterschaft an.'],
+['чемпио́н','Meister, Champion','Он стал чемпио́ном в два́дцать лет.','Er wurde mit zwanzig Champion.'],
+['ти́тул','Titel','Моя́ цель – вы́играть ти́тул.','Mein Ziel ist es, einen Titel zu gewinnen.'],
+['побе́да','Sieg','По́сле побе́ды он сказа́л: «Альхамдулилла́х».','Nach dem Sieg sagte er: „Alhamdulillah“.'],
+['победи́ть','siegen, besiegen','Он победи́л сопе́рника в пе́рвом ра́унде.','Er besiegte den Gegner in der ersten Runde.'],
+['проигра́ть','verlieren','Проигра́ть не стра́шно, стра́шно сда́ться.','Verlieren ist nicht schlimm, aufgeben ist schlimm.'],
+['сда́ться','aufgeben','Настоя́щий бое́ц никогда́ не сдаётся.','Ein echter Kämpfer gibt nie auf.'],
+['весова́я катего́рия','Gewichtsklasse','Он выступа́ет в лёгкой весово́й катего́рии.','Er tritt im Leichtgewicht an.'],
+['вес','Gewicht','Како́й у тебя́ вес?','Wie viel wiegst du?'],
+['тре́нер','Trainer','Мой тре́нер о́чень стро́гий.','Mein Trainer ist sehr streng.'],
+['трениро́вка','Training','Трениро́вка начина́ется в шесть часо́в.','Das Training beginnt um sechs Uhr.'],
+['тренирова́ться','trainieren','Я тренирую́сь пять раз в неде́лю.','Ich trainiere fünfmal pro Woche.'],
+['зал','Halle, Gym','По́сле рабо́ты я иду́ в зал.','Nach der Arbeit gehe ich ins Gym.'],
+['разми́нка','Aufwärmen','Пе́ред трениро́вкой всегда́ де́лают разми́нку.','Vor dem Training wärmt man sich immer auf.'],
+['упражне́ние','Übung','Э́то моё люби́мое упражне́ние.','Das ist meine Lieblingsübung.'],
+['турни́к','Reckstange','Во дворе́ есть турни́к.','Im Hof gibt es eine Reckstange.'],
+['подтя́гивания','Klimmzüge','Он де́лает подтя́гивания с ве́сом.','Er macht Klimmzüge mit Gewicht.'],
+['отжима́ния на бру́сьях','Dips','Отжима́ния на бру́сьях – ба́за стритлифтинга.','Dips sind die Basis des Streetliftings.'],
+['приседа́ния','Kniebeugen','Приседа́ния – тяжёлое упражне́ние.','Kniebeugen sind eine schwere Übung.'],
+['подхо́д','Satz','Я сде́лал пять подхо́дов.','Ich habe fünf Sätze gemacht.'],
+['повторе́ние','Wiederholung','В ка́ждом подхо́де три повторе́ния.','In jedem Satz drei Wiederholungen.'],
+['си́ла','Kraft','Си́ла без те́хники ничего́ не зна́чит.','Kraft ohne Technik bedeutet nichts.'],
+['вы́носливость','Ausdauer','Для бо́я нужна́ вы́носливость.','Für den Kampf braucht man Ausdauer.'],
+['дисципли́на','Disziplin','Дисципли́на важне́е мотива́ции.','Disziplin ist wichtiger als Motivation.'],
+['о́тдых','Erholung, Pause','О́тдых – то́же часть трениро́вки.','Erholung ist auch Teil des Trainings.'],
+['реко́рд','Rekord','Он поста́вил но́вый реко́рд.','Er hat einen neuen Rekord aufgestellt.']]
+};
+
+/* Lesetexte: {Wort|Bedeutung} wird antippbar */
+const X=[
+{id:'t1',tp:'islam',lv:'A2',ti:'Пятница в мечети',de:'Freitag in der Moschee',
+tx:'Каждую {пятницу|Freitag (Akk.)} Али {ходит|geht (regelmäßig)} в {мечеть|Moschee}. Перед {намазом|Gebet (Instr.)} он {совершает|vollzieht} {омовение|rituelle Waschung}. В мечети много людей: {старики|alte Männer}, молодые {парни|Jungs}, дети. {Имам|Imam} читает {проповедь|Predigt}. Сегодня проповедь о {терпении|Geduld (Präp.)}. Имам говорит, что жизнь – это {испытание|Prüfung}, и {верующий|der Gläubige} должен быть {терпеливым|geduldig (Instr.)}. После намаза Али {разговаривает|unterhält sich} с друзьями во {дворе|Hof (Präp.)} мечети. Потом они вместе идут {обедать|zu Mittag essen}. Для Али пятница – самый {любимый|liebster} день недели.',
+qs:[['Что Али делает перед намазом?',['Совершает омовение','Обедает с друзьями','Читает проповедь']],['О чём была проповедь?',['О терпении','О спорте','О Рамадане']],['Какой день недели Али любит больше всего?',['Пятницу','Субботу','Понедельник']]]},
+{id:'t2',tp:'islam',lv:'A2+',ti:'Рамадан в нашей семье',de:'Ramadan in unserer Familie',
+tx:'Когда {начинается|beginnt} Рамадан, наша жизнь {меняется|verändert sich}. Мы {встаём|stehen auf} очень рано, ещё до {рассвета|Morgendämmerung (Gen.)}, и едим {сухур|Suhur, Mahlzeit vor dem Fasten}. Днём мы не едим и не пьём. Это {нелегко|nicht leicht}, особенно летом, когда дни {длинные|lang}. Вечером, после {заката|Sonnenuntergang (Gen.)}, вся семья {собирается|versammelt sich} за столом. Мы {разговляемся|brechen das Fasten} финиками и водой, а потом едим суп и {горячее|warmes Hauptgericht}. Мама всегда готовит больше, чем нужно, потому что к нам часто приходят гости и {соседи|Nachbarn}. В конце месяца мы {празднуем|feiern} Ураза-байрам.',
+qs:[['Когда семья ест сухур?',['До рассвета','После заката','В обед']],['Чем семья разговляется сначала?',['Финиками и водой','Супом','Хинкалом']],['Почему мама готовит много?',['Потому что приходят гости','Потому что завтра праздник','Потому что все болеют']]]},
+{id:'t3',tp:'dag',lv:'A2+',ti:'Страна гор',de:'Das Land der Berge',
+tx:'Дагестан {находится|liegt} на Северном Кавказе, на берегу Каспийского моря. Название «Дагестан» {означает|bedeutet} «страна гор». Это {небольшая|kleine} республика, но здесь живёт {более|mehr als} тридцати {коренных|einheimischen} народов: аварцы, даргинцы, кумыки, лезгины, лакцы и многие другие. У каждого народа свой язык и свои {традиции|Traditionen}. Поэтому многие дагестанцы говорят на двух или трёх языках, а русский язык {объединяет|vereint} всех. Столица республики – Махачкала. А Дербент – один из самых {древних|uralten (Gen. Pl.)} городов России. Ему больше пяти тысяч лет.',
+qs:[['Что означает слово «Дагестан»?',['Страна гор','Город у моря','Земля борцов']],['Какой язык объединяет всех дагестанцев?',['Русский','Аварский','Арабский']],['Какой город – один из самых древних в России?',['Дербент','Махачкала','Каспийск']]]},
+{id:'t4',tp:'dag',lv:'B1',ti:'Гость в ауле',de:'Gast im Bergdorf',
+tx:'Прошлым летом я {впервые|zum ersten Mal} {поехал|fuhr (pf.)} в горный аул к {родственникам|Verwandten (Dat.)} моего друга. Дорога была {узкая|schmal} и {опасная|gefährlich}, но виды были {потрясающие|atemberaubend}. Когда мы {приехали|kamen an}, нас {встретила|empfing} вся семья. Меня сразу {посадили|man setzte (mich)} на лучшее место. Хозяйка {приготовила|hat zubereitet} хинкал с бараниной и {чесночным соусом|Knoblauchsoße (Instr.)}. {Старший|der Älteste} в доме, дедушка Магомед, рассказывал истории о своей {молодости|Jugend (Präp.)}. Я понял, что в Дагестане гость – это {святое|etwas Heiliges}. {Уезжать|wegfahren} мне совсем не хотелось.',
+qs:[['Куда поехал автор?',['В горный аул','В Махачкалу','На море']],['Что приготовила хозяйка?',['Хинкал с бараниной','Плов','Суп']],['Кто рассказывал истории?',['Дедушка Магомед','Друг автора','Хозяйка']]]},
+{id:'t5',tp:'sport',lv:'B1',ti:'Земля борцов',de:'Das Land der Ringer',
+tx:'Если вы {спросите|fragen (werden)} дагестанского мальчика, каким спортом он {занимается|betreibt}, он, {скорее всего|höchstwahrscheinlich}, {ответит|wird antworten}: «Борьбой». Вольная борьба в Дагестане – больше, чем спорт. Почти в каждом {селе|Dorf (Präp.)} есть спортзал, где дети тренируются с шести-семи лет. Многие {олимпийские|olympische} чемпионы по вольной борьбе {родом из|stammen aus} Дагестана. {Позже|Später} в республике стали {популярны|beliebt} и ММА. Самый известный боец – Хабиб Нурмагомедов, который {ушёл из спорта|beendete seine Karriere} {непобеждённым|unbesiegt}. Тренеры говорят, что главное в борьбе – не только {сила|Kraft}, но и {характер|Charakter}.',
+qs:[['Каким спортом чаще всего занимаются мальчики в Дагестане?',['Вольной борьбой','Футболом','Теннисом']],['С какого возраста дети тренируются?',['С шести-семи лет','С двенадцати лет','С восемнадцати лет']],['Что говорят тренеры?',['Важны сила и характер','Важна только сила','Важна только техника']]]},
+{id:'t6',tp:'sport',lv:'B1',ti:'День перед боем',de:'Der Tag vor dem Kampf',
+tx:'Завтра у меня бой на {чемпионате|Meisterschaft (Präp.)}. Я {проснулся|wachte auf} рано, {помолился|betete (pf.)} и {позавтракал|frühstückte}. Утром была {лёгкая|leichte} {разминка|Aufwärmen}, ничего {тяжёлого|Schweres}. Днём было {взвешивание|Wiegen}. Я {волновался|war nervös}, но мой вес был {точно|genau} в моей {весовой категории|Gewichtsklasse (Präp.)}. После взвешивания тренер сказал: «Ты {готов|bereit}. Не думай о {сопернике|Gegner (Präp.)}, думай о своей работе». Вечером я позвонил маме. Она сказала, что будет делать дуа за меня. Я {лёг спать|ging schlafen} в десять, потому что {отдых|Erholung} – это тоже часть {подготовки|Vorbereitung (Gen.)}.',
+qs:[['Что было днём?',['Взвешивание','Бой','Тяжёлая тренировка']],['Что сказал тренер?',['Думай о своей работе','Думай о сопернике','Иди домой']],['Почему он лёг спать рано?',['Отдых – часть подготовки','Он был болен','Он устал после боя']]]}
+];
+
+/* Grammatik: Erklärung, Beispiele, Übungen [Satz, [richtig, falsch, falsch]] */
+const G=[
+{id:'g1',ti:'Präpositiv: wo? worüber?',lv:'A2',ex:'Nach <b>в / на</b> (wo?) und <b>о</b> (über) steht der Präpositiv. Meist Endung <b>-е</b>. Feminin auf <b>-ь</b> und Wörter auf <b>-ие</b> bekommen <b>-и</b> bzw. <b>-ии</b>.',
+eg:[['в мечети, в Дагестане','in der Moschee, in Dagestan'],['на тренировке','im Training'],['проповедь о терпении','Predigt über Geduld']],
+q:[['Мы молимся в ___. (мечеть)',['мечети','мечеть','мечетью']],['Он живёт в ___. (Дагестан)',['Дагестане','Дагестана','Дагестаном']],['Я сейчас на ___. (тренировка)',['тренировке','тренировку','тренировкой']],['Имам говорил о ___. (терпение)',['терпении','терпение','терпением']]]},
+{id:'g2',ti:'Genitiv: nicht haben, viel, nach, aus',lv:'A2',ex:'Der Genitiv steht nach <b>нет</b>, Mengen (<b>много, мало</b>) und Präpositionen wie <b>после, до, из, у, без</b>. Maskulin <b>-а</b>, Feminin <b>-ы/-и</b>, Plural oft <b>-ов</b>. Achtung: <b>время → времени</b>.',
+eg:[['много языков','viele Sprachen'],['после намаза','nach dem Gebet'],['Мой друг из Дербента.','Mein Freund ist aus Derbent.']],
+q:[['В Дагестане много ___. (язык)',['языков','языки','языках']],['После ___ мы пьём чай. (намаз)',['намаза','намазе','намазом']],['У меня нет ___. (время)',['времени','время','временем']],['Мой друг из ___. (Дербент)',['Дербента','Дербенте','Дербентом']]]},
+{id:'g3',ti:'Instrumental: womit? als was?',lv:'A2+',ex:'Nach <b>заниматься</b> (Sport treiben), <b>с</b> (mit), <b>стать / быть</b> (werden / sein) steht der Instrumental. Maskulin <b>-ом</b>, Feminin <b>-ой</b>, Plural <b>-ами/-ями</b>.',
+eg:[['заниматься борьбой','Ringen betreiben'],['хинкал с бараниной','Chinkal mit Hammelfleisch'],['стать чемпионом','Champion werden']],
+q:[['Он занимается ___. (борьба)',['борьбой','борьбу','борьбе']],['Мама готовит хинкал с ___. (баранина)',['бараниной','баранину','баранины']],['Он хочет стать ___. (чемпион)',['чемпионом','чемпиона','чемпион']],['Я пью чай с ___. (друзья)',['друзьями','друзей','друзьям']]]},
+{id:'g4',ti:'Verbalaspekt: Prozess oder Ergebnis',lv:'B1',ex:'<b>Imperfektiv</b> für Gewohnheit, Wiederholung, Prozess (<i>каждый день, часто, долго</i>). <b>Perfektiv</b> für ein einmaliges, abgeschlossenes Ergebnis (<i>наконец, уже, вчера … целиком</i>). Perfektiv hat keine Gegenwart: <b>прочитаю</b> ist Zukunft.',
+eg:[['Каждое утро я читаю Коран.','Jeden Morgen lese ich den Koran. (Gewohnheit)'],['Наконец я выучил суру!','Endlich habe ich die Sure gelernt! (Ergebnis)'],['Он часто побеждал, но вчера проиграл.','Er gewann oft, aber gestern verlor er.']],
+q:[['Каждое утро я ___ Коран.',['читаю','прочитаю','прочитал']],['Наконец я ___ всю суру наизусть!',['выучил','учил','учу']],['Раньше он часто ___, но вчера проиграл.',['побеждал','победил','победит']],['Когда ___ разминку, начинай тренировку.',['сделаешь','делаешь','делал']]]},
+{id:'g5',ti:'Verben der Bewegung',lv:'B1',ex:'<b>идти / ехать</b>: eine Richtung, jetzt oder konkret geplant. <b>ходить / ездить</b>: regelmäßig, hin und zurück. <b>идти, ходить</b> zu Fuß; <b>ехать, ездить</b> mit Fahrzeug.',
+eg:[['По пятницам я хожу в мечеть.','Freitags gehe ich (immer) in die Moschee.'],['Сейчас я иду в зал.','Ich gehe gerade ins Gym.'],['Каждое лето мы ездим в Дагестан.','Jeden Sommer fahren wir nach Dagestan.']],
+q:[['По пятницам я ___ в мечеть.',['хожу','иду','еду']],['Сейчас я ___ в зал, позвоню потом.',['иду','хожу','езжу']],['Каждое лето мы ___ в Дагестан на машине.',['ездим','едем','ходим']],['Завтра мы ___ в Махачкалу на поезде.',['едем','ездим','ходим']]]},
+{id:'g6',ti:'Dativ: mir gefällt, ich muss, zu',lv:'A2+',ex:'Wer etwas mag oder muss, steht im Dativ: <b>мне нравится, ему нужно</b>. Außerdem nach <b>к</b> (zu Person) und <b>по</b> (an, über: <i>по пятницам</i>).',
+eg:[['Мне нравится лезгинка.','Mir gefällt die Lesginka.'],['Ему нужно сделать омовение.','Er muss die Waschung vollziehen.'],['Мы едем к бабушке.','Wir fahren zur Oma.']],
+q:[['___ нравится лезгинка. (я)',['Мне','Меня','Мной']],['___ нужно сделать омовение. (он)',['Ему','Его','Он']],['По ___ мы ходим в мечеть. (пятницы)',['пятницам','пятницах','пятницы']],['Мы едем в гости к ___. (бабушка)',['бабушке','бабушку','бабушки']]]},
+{id:'g7',ti:'Relativsätze mit который',lv:'B1',ex:'<b>который</b> richtet sich in Geschlecht und Zahl nach dem Bezugswort, den Fall bestimmt der Nebensatz: <b>которую</b> (Akk. f.), <b>которым</b> (Instr.), <b>котором</b> (Präp.).',
+eg:[['Это боец, который никогда не проигрывал.','Das ist ein Kämpfer, der nie verloren hat.'],['Это мечеть, которую построили в VIII веке.','Das ist eine Moschee, die man im 8. Jh. gebaut hat.'],['Это аул, в котором живёт мой дедушка.','Das ist das Dorf, in dem mein Opa lebt.']],
+q:[['Это боец, ___ никогда не проигрывал.',['который','которая','которого']],['Это мечеть, ___ построили в VIII веке.',['которую','которая','которой']],['Это тренер, с ___ я работаю.',['которым','который','которого']],['Это аул, в ___ живёт мой дедушка.',['котором','который','которого']]]}
+];
+
+const P=[
+['Расскажи, как проходит твой день в Рамадан.','Erzähl, wie dein Tag im Ramadan abläuft.'],
+['Опиши мечеть, в которую ты ходишь.','Beschreibe die Moschee, in die du gehst.'],
+['Какой праздник ты любишь больше всего и почему?','Welches Fest magst du am liebsten und warum?'],
+['Что ты знаешь о Дагестане? Назови три факта.','Was weißt du über Dagestan? Nenne drei Fakten.'],
+['Почему в Дагестане так важно уважать старших?','Warum ist Respekt vor Älteren in Dagestan so wichtig?'],
+['Расскажи о своём любимом блюде и как его готовят.','Erzähl von deinem Lieblingsgericht und wie man es kocht.'],
+['Опиши место в горах, где ты хочешь побывать.','Beschreibe einen Ort in den Bergen, den du besuchen willst.'],
+['Расскажи, как прошла твоя последняя тренировка.','Erzähl, wie dein letztes Training war.'],
+['Что ты чувствуешь перед боем?','Was fühlst du vor einem Kampf?'],
+['Кто твой пример в спорте и почему?','Wer ist dein Vorbild im Sport und warum?'],
+['Что для тебя важнее: дисциплина или мотивация?','Was ist dir wichtiger: Disziplin oder Motivation?'],
+['Какие языки ты учишь и зачем?','Welche Sprachen lernst du und wozu?']
+];
+
+/* Speicher */
+const KEY='tropa-ru-v1';let S={c:{},d:{},a:{},tx:{},gr:{},qb:0};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const day=(o=0)=>{const d=new Date();d.setDate(d.getDate()+o);return d.toISOString().slice(0,10)};
+const dnum=s=>Math.floor(new Date(s+'T12:00:00').getTime()/864e5);
+const mark=()=>{S.a[day()]=1;save();stats()};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const plain=s=>s.replace(/́/g,'');
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const $=id=>document.getElementById(id);
+const IV=[0,1,2,4,8,16];
+const spkSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';
+const say=t=>{try{const u=new SpeechSynthesisUtterance(plain(t));u.lang='ru-RU';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)say(b.dataset.say)});
+
+function stats(){
+  let st=0,o=S.a[day()]||S.d[day()]?0:-1;
+  while(S.a[day(o)]||(S.d[day(o)]||0)>=60){st++;o--}
+  $('sStreak').textContent=st;
+  $('sToday').textContent=Math.floor((S.d[day()]||0)/60);
+  $('sKnown').textContent=Object.values(S.c).filter(c=>c.b>=3).length;
+}
+
+/* Timer 20 Minuten */
+let left=1200,run=null;
+const tShow=()=>{$('tm').textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0')};
+$('tGo').onclick=()=>{
+  if(run){clearInterval(run);run=null;$('tGo').textContent='Weiter';return}
+  if(left<=0)left=1200;
+  $('tGo').textContent='Pause';
+  run=setInterval(()=>{left--;S.d[day()]=(S.d[day()]||0)+1;if(left%15===0){save();stats()}tShow();
+    if(left<=0){clearInterval(run);run=null;S.a[day()]=1;save();stats();$('tGo').textContent='Fertig ✓'}},1000)};
+$('tRe').onclick=()=>{clearInterval(run);run=null;left=1200;$('tGo').textContent='Start';tShow()};
+
+/* Tabs */
+const TABS=[['heute','Heute'],['karten','Karten'],['texte','Texte'],['grammatik','Grammatik'],['quiz','Quiz'],['sprechen','Sprechen']];
+let tab='heute',topic='islam';
+$('tabs').innerHTML=TABS.map(([k,n])=>`<button role="tab" data-tab="${k}" aria-selected="false">${n}</button>`).join('');
+$('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b){location.hash=b.dataset.tab}};
+const route=()=>{const h=location.hash.slice(1);tab=TABS.some(t=>t[0]===h)?h:'heute';
+  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));render()};
+window.addEventListener('hashchange',route);
+
+const chips=(cur,all=true)=>`<div class="chips" id="chips">${(all?[{id:'all',n:'Alle Themen'}]:[]).concat(T).map(t=>`<button class="chip" data-tp="${t.id}" aria-pressed="${t.id===cur}">${t.n}</button>`).join('')}</div>`;
+const bindChips=fn=>{$('chips').onclick=e=>{const b=e.target.closest('[data-tp]');if(b)fn(b.dataset.tp)}};
+const words=tp=>(tp==='all'?T.flatMap(t=>V[t.id]):V[tp]);
+
+function render(){({heute,karten,texte,grammatik,quiz,sprechen})[tab]();window.scrollTo({top:0})}
+
+/* HEUTE */
+function heute(){
+  const all=T.flatMap(t=>V[t.id]),now=dnum(day());
+  const due=all.filter(w=>S.c[w[0]]&&dnum(S.c[w[0]].dd)<=now).length,nw=all.filter(w=>!S.c[w[0]]).length;
+  const nextT=X.find(x=>!S.tx[x.id])||X[0],nextG=G.find(g=>!S.gr[g.id])||G[0];
+  const pct=t=>{const w=V[t.id];return Math.round(w.filter(x=>S.c[x[0]]&&S.c[x[0]].b>=3).length/w.length*100)};
+  $('view').innerHTML=`<h2>Deine 20 Minuten</h2><p class="lead">Starte oben den Timer und arbeite die drei Blöcke durch. Die Zeit zählt automatisch.</p>
+  <div class="grid2">
+   <a class="item" href="#karten" style="text-decoration:none;color:inherit"><div><div class="t">1 · Karten · 5 Min.</div><div class="s">${due} fällig, ${nw} neu</div></div><span class="tag">Los</span></a>
+   <button class="item" id="goT"><div><div class="t">2 · Text · 10 Min.</div><div class="s">${esc(nextT.ti)}</div></div><span class="tag">${nextT.lv}</span></button>
+   <button class="item" id="goG"><div><div class="t">3 · Grammatik · 5 Min.</div><div class="s">${esc(nextG.ti)}</div></div><span class="tag">${nextG.lv}</span></button>
+  </div>
+  <h3>Fortschritt pro Thema</h3>
+  <div class="list">${T.map(t=>`<div><div style="display:flex;justify-content:space-between"><span>${t.n} · <span style="font-family:'PT Serif',serif">${t.ru}</span></span><span class="meta">${pct(t)} %</span></div><div class="bar"><i style="width:${pct(t)}%"></i></div></div>`).join('')}</div>
+  <div class="grid2" style="margin-top:18px">
+   <div class="card"><div class="score">${Object.keys(S.tx).length}/${X.length}</div><div class="meta">Texte gelesen</div></div>
+   <div class="card"><div class="score">${Object.keys(S.gr).length}/${G.length}</div><div class="meta">Grammatik-Themen geübt</div></div>
+   <div class="card"><div class="score">${S.qb}/10</div><div class="meta">Bestes Quiz</div></div>
+  </div>
+  <p class="note">Fortschritt wird nur in diesem Browser gespeichert. Betonungen (´) stehen in den Karten; im echten Russisch schreibt man sie nicht.</p>`;
+  $('goT').onclick=()=>{openText(nextT.id)};$('goG').onclick=()=>{openGram(nextG.id)};
+}
+
+/* KARTEN (Leitner-System) */
+let deck=[],di=0,flipped=false,dir='ru';
+function buildDeck(){
+  const now=dnum(day()),w=words(topic);
+  const due=shuf(w.filter(x=>S.c[x[0]]&&dnum(S.c[x[0]].dd)<=now));
+  const fresh=w.filter(x=>!S.c[x[0]]).slice(0,8);
+  deck=due.concat(fresh);di=0;flipped=false;
+}
+function karten(){
+  if(topic==='all'&&!deck.length)topic='islam';
+  buildDeck();drawCards();
+}
+function drawCards(){
+  const w=deck[di];
+  let body;
+  if(!w){const nxt=words(topic).filter(x=>S.c[x[0]]).map(x=>dnum(S.c[x[0]].dd)).sort((a,b)=>a-b)[0];
+    body=`<div class="card flash"><div class="word">Готово!</div><p>Für heute ist alles wiederholt.${nxt?' Nächste Karten in '+Math.max(1,nxt-dnum(day()))+' Tag(en).':''}</p><div class="row"><button class="btn alt" id="more">8 neue Wörter</button></div></div>`}
+  else{const c=S.c[w[0]],b=c?c.b:0,front=dir==='ru';
+    body=`<div class="card flash" id="fc">
+     ${front||flipped?`<div class="word">${esc(w[0])} <button class="spk" data-say="${esc(w[0])}" aria-label="Anhören">${spkSvg}</button></div>`:''}
+     ${!front||flipped?`<div class="de">${esc(w[1])}</div>`:''}
+     ${flipped?`<div class="ex">${esc(w[2])} <button class="spk" data-say="${esc(w[2])}" aria-label="Satz anhören">${spkSvg}</button><i>${esc(w[3])}</i></div>`:'<p class="meta">Erst selbst überlegen, dann umdrehen.</p>'}
+     <div class="boxes" aria-label="Stufe ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?'on':''}"></i>`).join('')}</div>
+    </div>
+    <div class="row">${flipped?`<button class="btn" id="no">Nochmal</button><button class="btn alt" id="yes">Wusste ich</button>`:`<button class="btn" id="flip">Umdrehen</button>`}
+     <span class="meta" style="align-self:center">${di+1} / ${deck.length}</span></div>`}
+  $('view').innerHTML=`<h2>Karten</h2><p class="lead">Gewusste Wörter kommen in immer größeren Abständen wieder (1, 2, 4, 8, 16 Tage).</p>${chips(topic)}
+   <div class="chips"><button class="chip" id="dRu" aria-pressed="${dir==='ru'}">Russisch → Deutsch</button><button class="chip" id="dDe" aria-pressed="${dir==='de'}">Deutsch → Russisch</button></div>${body}`;
+  bindChips(t=>{topic=t;buildDeck();drawCards()});
+  $('dRu').onclick=()=>{dir='ru';flipped=false;drawCards()};$('dDe').onclick=()=>{dir='de';flipped=false;drawCards()};
+  if($('flip'))$('flip').onclick=()=>{flipped=true;drawCards();if(dir==='de')say(w[0])};
+  if($('yes'))$('yes').onclick=()=>grade(true);
+  if($('no'))$('no').onclick=()=>grade(false);
+  if($('more'))$('more').onclick=()=>{const f=words(topic).filter(x=>!S.c[x[0]]).slice(0,8);deck=f.length?f:shuf(words(topic)).slice(0,8);di=0;flipped=false;drawCards()};
+}
+function grade(ok){
+  const w=deck[di],c=S.c[w[0]]||{b:0};
+  c.b=ok?Math.min(5,c.b+1):1;
+  const d=new Date();d.setDate(d.getDate()+(ok?IV[c.b]:0));c.dd=d.toISOString().slice(0,10);
+  S.c[w[0]]=c;if(!ok)deck.push(w);
+  di++;flipped=false;mark();drawCards();
+}
+
+/* TEXTE */
+let ttp='all';
+function texte(){
+  const ls=X.filter(x=>ttp==='all'||x.tp===ttp);
+  $('view').innerHTML=`<h2>Texte</h2><p class="lead">Kurze Lesetexte von A2 bis B1. Unterstrichene Wörter antippen für die Bedeutung.</p>${chips(ttp)}
+  <div class="list">${ls.map(x=>`<button class="item" data-x="${x.id}"><div><div class="t" style="font-family:'PT Serif',serif;font-size:19px">${esc(x.ti)}</div><div class="s">${esc(x.de)} · ${T.find(t=>t.id===x.tp).n}</div></div><span class="tag ${S.tx[x.id]?'done':''}">${S.tx[x.id]?'gelesen':x.lv}</span></button>`).join('')}</div>`;
+  bindChips(t=>{ttp=t;texte()});
+  $('view').querySelector('.list').onclick=e=>{const b=e.target.closest('[data-x]');if(b)openText(b.dataset.x)};
+}
+function openText(id){
+  if(tab!=='texte'){history.replaceState(null,'','#texte');tab='texte';document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab==='texte'))}
+  const x=X.find(t=>t.id===id);
+  const html=esc(x.tx).replace(/\{([^|}]+)\|([^}]+)\}/g,(m,w,g)=>`<button class="g" data-g="${g}" data-w="${w}">${w}</button>`);
+  const qs=x.qs.map((q,i)=>`<div class="q" data-q="${i}"><p>${i+1}. ${esc(q[0])}</p><div class="opts">${shuf(q[1].map((o,j)=>[o,j===0])).map(([o,r])=>`<button class="opt" data-r="${r}">${esc(o)}</button>`).join('')}</div></div>`).join('');
+  $('view').innerHTML=`<button class="btn gh" id="back">← Alle Texte</button>
+  <h2 style="margin-top:16px;font-family:'PT Serif',serif">${esc(x.ti)} <button class="spk" data-say="${esc(x.tx.replace(/\{([^|}]+)\|[^}]+\}/g,'$1'))}" aria-label="Text vorlesen">${spkSvg}</button></h2>
+  <p class="lead">${esc(x.de)} · ${x.lv}</p>
+  <div class="card"><div class="text" id="tx">${html}</div>
+  <div class="gloss" id="gl"><span>Tippe ein unterstrichenes Wort an.</span></div></div>
+  <h3>Verständnisfragen</h3><div id="qs">${qs}</div><p class="meta" id="res"></p>`;
+  $('back').onclick=texte;
+  $('tx').onclick=e=>{const b=e.target.closest('.g');if(!b)return;document.querySelectorAll('.g.on').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    $('gl').innerHTML=`<span><b>${esc(b.dataset.w)}</b> · ${esc(b.dataset.g)}</span><button class="spk" style="border-color:rgba(255,255,255,.5)" data-say="${esc(b.dataset.w)}" aria-label="Anhören">${spkSvg}</button>`};
+  let done=0,right=0;
+  $('qs').onclick=e=>{const o=e.target.closest('.opt');if(!o)return;const q=o.closest('.q');if(q.dataset.a)return;q.dataset.a=1;done++;
+    const r=o.dataset.r==='true';if(r)right++;o.classList.add(r?'ok':'bad');if(!r)q.querySelector('[data-r=true]').classList.add('ok');
+    if(done===x.qs.length){S.tx[x.id]=1;mark();$('res').textContent=`${right} von ${x.qs.length} richtig. Text als gelesen markiert.`}};
+  window.scrollTo({top:0});
+}
+
+/* GRAMMATIK */
+function grammatik(){
+  $('view').innerHTML=`<h2>Grammatik</h2><p class="lead">Die wichtigsten Schritte von A2 zu B1, mit Sätzen aus deinen drei Themen.</p>
+  <div class="list">${G.map(g=>`<button class="item" data-g="${g.id}"><div><div class="t">${esc(g.ti)}</div><div class="s">${g.q.length} Übungen</div></div><span class="tag ${S.gr[g.id]?'done':''}">${S.gr[g.id]?S.gr[g.id]+'/'+g.q.length:g.lv}</span></button>`).join('')}</div>`;
+  $('view').querySelector('.list').onclick=e=>{const b=e.target.closest('[data-g]');if(b)openGram(b.dataset.g)};
+}
+function openGram(id){
+  if(tab!=='grammatik'){history.replaceState(null,'','#grammatik');tab='grammatik';document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab==='grammatik'))}
+  const g=G.find(x=>x.id===id);
+  $('view').innerHTML=`<button class="btn gh" id="back">← Alle Themen</button>
+  <h2 style="margin-top:16px">${esc(g.ti)}</h2><p class="lead">Niveau ${g.lv}</p>
+  <div class="expl">${g.ex}<ul class="exs">${g.eg.map(e=>`<li>${esc(e[0])}<span>${esc(e[1])}</span></li>`).join('')}</ul></div>
+  <h3>Übung</h3><div id="qs">${g.q.map((q,i)=>`<div class="q"><p style="font-family:'PT Serif',serif;font-size:19px">${i+1}. ${esc(q[0])}</p><div class="opts">${shuf(q[1].map((o,j)=>[o,j===0])).map(([o,r])=>`<button class="opt" data-r="${r}" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`).join('')}</div><p class="meta" id="res"></p>`;
+  $('back').onclick=grammatik;
+  let done=0,right=0;
+  $('qs').onclick=e=>{const o=e.target.closest('.opt');if(!o)return;const q=o.closest('.q');if(q.dataset.a)return;q.dataset.a=1;done++;
+    const r=o.dataset.r==='true';if(r)right++;o.classList.add(r?'ok':'bad');const c=q.querySelector('[data-r=true]');c.classList.add('ok');
+    const p=q.querySelector('p');say(p.textContent.replace(/^\d+\.\s*/,'').replace('___',c.dataset.v).replace(/\s*\([^)]*\)/,''));
+    if(done===g.q.length){S.gr[g.id]=right;mark();$('res').textContent=`${right} von ${g.q.length} richtig.`}};
+  window.scrollTo({top:0});
+}
+
+/* QUIZ */
+let qtp='all';
+function quiz(){
+  const pool=words(qtp),qs=shuf(pool).slice(0,10).map((w,i)=>{
+    const ru=i%2===0,wrong=shuf(pool.filter(x=>x!==w)).slice(0,3);
+    return{p:ru?w[0]:w[1],a:ru?w[1]:w[0],o:shuf([w].concat(wrong).map(x=>ru?x[1]:x[0])),ru}});
+  $('view').innerHTML=`<h2>Quiz</h2><p class="lead">10 Fragen, abwechselnd Russisch → Deutsch und Deutsch → Russisch.</p>${chips(qtp)}
+  <div id="qs">${qs.map((q,i)=>`<div class="q" data-i="${i}"><p>${i+1}. <span style="${q.ru?"font-family:'PT Serif',serif;font-size:20px":''}">${esc(q.p)}</span></p><div class="opts">${q.o.map(o=>`<button class="opt" data-v="${esc(o)}" style="${q.ru?'font-family:Rubik,sans-serif':''}">${esc(o)}</button>`).join('')}</div></div>`).join('')}</div>
+  <div class="card" id="sc" hidden><div class="score" id="scv"></div><p class="meta">Bestes Ergebnis: <span id="scb"></span>/10</p><button class="btn" id="again">Neues Quiz</button></div>`;
+  bindChips(t=>{qtp=t;quiz()});
+  let done=0,right=0;
+  $('qs').onclick=e=>{const o=e.target.closest('.opt');if(!o)return;const qd=o.closest('.q');if(qd.dataset.a)return;qd.dataset.a=1;done++;
+    const q=qs[+qd.dataset.i],r=o.dataset.v===q.a;if(r)right++;o.classList.add(r?'ok':'bad');
+    qd.querySelectorAll('.opt').forEach(b=>{if(b.dataset.v===q.a)b.classList.add('ok')});
+    say(q.ru?q.p:q.a);
+    if(done===qs.length){S.qb=Math.max(S.qb,right);mark();$('sc').hidden=false;$('scv').textContent=right+'/10';$('scb').textContent=S.qb;$('sc').scrollIntoView({behavior:'smooth'})}};
+  $('again').onclick=quiz;
+}
+
+/* SPRECHEN */
+let pi=Math.floor(Math.random()*P.length);
+function sprechen(){
+  const p=P[pi];
+  const gpt=`Sprich mit mir auf Russisch, Niveau A2 bis B1. Thema: „${p[0]}“ Stell mir kurze Fragen, eine nach der anderen. Korrigiere meine Fehler erst am Ende in einer kurzen Liste mit der richtigen Form.`;
+  $('view').innerHTML=`<h2>Sprechen</h2><p class="lead">Sprich 2 bis 3 Minuten laut zu diesem Thema, oder kopiere den Prompt für deine Sprechübung mit ChatGPT.</p>
+  <div class="card flash" style="min-height:240px"><div class="prompt">${esc(p[0])}</div><div class="meta">${esc(p[1])}</div>
+   <div class="row" style="justify-content:center"><button class="spk" data-say="${esc(p[0])}" aria-label="Anhören">${spkSvg}</button><button class="btn alt" id="nx">Nächstes Thema</button><button class="btn" id="cp">Prompt kopieren</button></div>
+   <p class="meta" id="cpm"></p></div>
+  <h3>Hilfreiche Satzanfänge</h3>
+  <ul class="exs">${[['Я думаю, что…','Ich denke, dass…'],['Во-первых… во-вторых…','Erstens… zweitens…'],['Мне кажется, что…','Mir scheint, dass…'],['Например,…','Zum Beispiel…'],['Честно говоря,…','Ehrlich gesagt…'],['В общем,…','Alles in allem…']].map(e=>`<li>${e[0]}<span>${e[1]}</span></li>`).join('')}</ul>`;
+  $('nx').onclick=()=>{pi=(pi+1)%P.length;sprechen()};
+  $('cp').onclick=async()=>{try{await navigator.clipboard.writeText(gpt);$('cpm').textContent='Kopiert. In ChatGPT einfügen.';mark()}catch(e){$('cpm').textContent=gpt}};
+}
+
+tShow();stats();route();
+}
+</script>
+</body>
+</html>
