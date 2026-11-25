@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#9b1b30"/>
+  <g fill="#7a1225"><path d="M0 0h512v40H0zM0 472h512v40H0z"/></g>
+  <g fill="#e9a92b"><path d="M24 20l20-14 20 14-20 14z M104 20l20-14 20 14-20 14z M184 20l20-14 20 14-20 14z M264 20l20-14 20 14-20 14z M344 20l20-14 20 14-20 14z M424 20l20-14 20 14-20 14z"/>
+  <path d="M24 492l20-14 20 14-20 14z M104 492l20-14 20 14-20 14z M184 492l20-14 20 14-20 14z M264 492l20-14 20 14-20 14z M344 492l20-14 20 14-20 14z M424 492l20-14 20 14-20 14z"/></g>
+  <path d="M256 70 L440 256 L256 442 L72 256Z" fill="#e9a92b"/>
+  <path d="M256 104 L406 256 L256 408 L106 256Z" fill="#9b1b30"/>
+  <path d="M256 128 L382 256 L256 384 L130 256Z" fill="#16706f"/>
+  <text x="256" y="306" text-anchor="middle" font-family="DejaVu Serif" font-weight="bold" font-size="150" fill="#fff6ee">Т</text>
+</svg>

@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Тропа · Russisch A2→B1</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#7a1225">
+<link rel="icon" type="image/png" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Тропа">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=PT+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -96,7 +104,7 @@ h3{font-size:20px;margin:22px 0 8px}
     <div class="st"><b id="sToday">0</b><span>Min. heute</span></div>
     <div class="st"><b id="sKnown">0</b><span>Wörter sicher</span></div>
   </div>
-  <div class="acct"><button id="login">Mit Google anmelden</button><span id="who">Nur auf diesem Gerät gespeichert</span></div>
+  <div class="acct"><button id="login">Mit Google anmelden</button><span id="who">Nur auf diesem Gerät gespeichert</span><button id="inst" hidden>App installieren</button></div>
   <div class="timer"><b id="tm">20:00</b><button id="tGo">Start</button><button id="tRe" class="g2" aria-label="Timer zurücksetzen">↺</button></div>
 </div></header>
 <svg class="rug" viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true">
@@ -495,6 +503,24 @@ function sprechen(){
 }
 
 tShow();stats();route();
+}
+</script>
+<div id="iosTip" hidden style="display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:20;background:#16706f;color:#fff;border-radius:14px;padding:14px 16px;gap:12px;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.25)">
+  <span>Installieren auf dem iPhone: in Safari unten auf <b>Teilen</b> tippen, dann <b>„Zum Home-Bildschirm“</b>.</span>
+  <button id="iosX" style="flex:none;min-height:44px;min-width:44px;border:0;border-radius:10px;background:rgba(255,255,255,.2);color:#fff" aria-label="Schließen">✕</button>
+</div>
+<script>
+{/* Installation als App (PWA) */
+const inst=document.getElementById('inst'),tip=document.getElementById('iosTip');
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+if('serviceWorker' in navigator&&location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+let ev=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;inst.hidden=false});
+addEventListener('appinstalled',()=>{inst.hidden=true});
+const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+if(ios&&!standalone&&location.protocol==='https:'){inst.hidden=false}
+inst.onclick=async()=>{if(ev){ev.prompt();await ev.userChoice;ev=null;inst.hidden=true}else if(ios){tip.hidden=false;tip.style.display='flex'}};
+document.getElementById('iosX').onclick=()=>{tip.hidden=true;tip.style.display='none'};
 }
 </script>
 <script type="module">

@@ -22,3 +22,9 @@ Einfach `index.html` im Browser öffnen. Der Fortschritt wird im `localStorage` 
 
 Ohne Konfiguration funktioniert die App weiter, speichert dann aber nur lokal im Browser.
 Beim Anmelden werden lokaler Fortschritt und Cloud-Fortschritt zusammengeführt.
+
+## Als App installieren
+- **Android / Chrome / Edge:** oben in der App auf „App installieren“ tippen.
+- **iPhone / iPad:** in Safari auf Teilen → „Zum Home-Bildschirm“.
+
+Die App funktioniert danach auch offline (Fortschritt wird beim nächsten Online-Sein mit Firebase synchronisiert, wenn du angemeldet bist).
